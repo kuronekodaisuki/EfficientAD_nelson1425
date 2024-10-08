@@ -26,6 +26,10 @@ def main(config):
                                    config.dataset, config.subdataset, 'test')
     print(train_dir, test_dir)
 
+    teacher = torch.load(os.path.join(train_dir, 'teacher_final.pth'))
+    student = torch.load(os.path.join(train_dir, 'student_final.pth'))
+    autoencoder = torch.load(os.path.join(train_dir, 'autoencoder_final.pth'))
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--dataset', default='mvtec_loco',
