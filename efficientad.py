@@ -9,6 +9,7 @@ import argparse
 import itertools
 import os
 import random
+import yaml
 from tqdm import tqdm
 from common import get_autoencoder, get_pdn_small, get_pdn_medium, \
     ImageFolderWithoutTarget, ImageFolderWithPath, InfiniteDataloader
@@ -258,6 +259,9 @@ def main():
         q_ae_start=q_ae_start, q_ae_end=q_ae_end,
         test_output_dir=test_output_dir, desc='Final inference')
     print('Final image auc: {:.4f}'.format(auc))
+    saveParameters(os.path.join(train_output_dir, 'parameters.yaml'), 
+                   teacher_mean=teacher_mean, teacher_std=teacher_std,
+                   q_st_start=q_st_start, q_st_end=q_st_end, q_ae_start=q_ae_start, q_ae_end=q_ae_end)
 
 def test(test_set, teacher, student, autoencoder, teacher_mean, teacher_std,
          q_st_start, q_st_end, q_ae_start, q_ae_end, test_output_dir=None,
@@ -364,6 +368,17 @@ def teacher_normalization(teacher, train_loader):
     channel_std = torch.sqrt(channel_var)
 
     return channel_mean, channel_std
+
+def saveParameters(file_path, teacher_mean, teacher_std, q_st_start, q_st_end, q_ae_start, q_ae_end):
+    object = {'teacher_mean': teacher_mean, 
+              'teacher_std': teacher_std, 
+              'q_st_start': q_st_start,
+              'q_st_end': q_st_end,
+              'q_ae_start': q_ae_start,
+              'q_ae_end': q_ae_end}
+    
+    with open(file_path, 'w') as f:
+        yaml.dump(object, f)
 
 if __name__ == '__main__':
     main()
