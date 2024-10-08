@@ -378,7 +378,7 @@ def saveParameters(file_path, teacher_mean, teacher_std, q_st_start, q_st_end, q
               'q_ae_end': q_ae_end}
     
     with open(file_path, 'w') as f:
-        yaml.dump(object, f)
+        yaml.dump(object, f, allow_unicode=True)
 
 if __name__ == '__main__':
     main()
