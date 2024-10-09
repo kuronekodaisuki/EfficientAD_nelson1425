@@ -9,7 +9,7 @@ import argparse
 import itertools
 import os
 import random
-import yaml
+
 from tqdm import tqdm
 from common import get_autoencoder, get_pdn_small, get_pdn_medium, \
     ImageFolderWithoutTarget, ImageFolderWithPath, InfiniteDataloader

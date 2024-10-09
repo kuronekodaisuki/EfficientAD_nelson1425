@@ -1,7 +1,6 @@
 import argparse
 import os
 import torch
-import yaml
 
 from common import get_autoencoder, get_pdn_small, get_pdn_medium, \
     ImageFolderWithoutTarget, ImageFolderWithPath, InfiniteDataloader
@@ -25,12 +24,23 @@ def main(config):
                                     config.dataset, config.subdataset)
     test_dir = os.path.join(config.output_dir, 'anomaly_maps',
                                    config.dataset, config.subdataset, 'test')
-    print(train_dir, test_dir)
+    #print(train_dir, test_dir)
 
     teacher = torch.load(os.path.join(train_dir, 'teacher_final.pth'))
     student = torch.load(os.path.join(train_dir, 'student_final.pth'))
     autoencoder = torch.load(os.path.join(train_dir, 'autoencoder_final.pth'))
-    t_mean, t_std, g_std_s, g_std_e, g_ae_s, g_ae_e = LoadParameters(train_dir)
+    t_mean, t_std, q_st_start, q_st_end, q_ae_start, q_ae_end = LoadParameters(train_dir)
+    
+    test_set = ImageFolderWithPath(
+        os.path.join(dataset_path, config.subdataset, 'test'))
+    
+    auc = test(
+            test_set=test_set, teacher=teacher, student=student,
+            autoencoder=autoencoder, teacher_mean=t_mean,
+            teacher_std=t_std, q_st_start=q_st_start,
+            q_st_end=q_st_end, q_ae_start=q_ae_start, q_ae_end=q_ae_end,
+            test_output_dir=None, desc='Inference')
+    print('Intermediate image auc: {:.4f}'.format(auc))
 
 # Load parameters for Inference
 def LoadParameters(file_path):
