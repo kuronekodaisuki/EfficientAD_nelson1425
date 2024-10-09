@@ -259,7 +259,8 @@ def main():
         q_ae_start=q_ae_start, q_ae_end=q_ae_end,
         test_output_dir=test_output_dir, desc='Final inference')
     print('Final image auc: {:.4f}'.format(auc))
-    saveParameters(os.path.join(train_output_dir, 'parameters.yaml'), 
+
+    saveParameters(train_output_dir, 
                    teacher_mean=teacher_mean, teacher_std=teacher_std,
                    q_st_start=q_st_start, q_st_end=q_st_end, q_ae_start=q_ae_start, q_ae_end=q_ae_end)
 
@@ -366,7 +367,6 @@ def teacher_normalization(teacher, train_loader):
     channel_var = torch.mean(torch.stack(mean_distances), dim=0)
     channel_var = channel_var[None, :, None, None]
     channel_std = torch.sqrt(channel_var)
-
     return channel_mean, channel_std
 
 def saveParameters(file_path, teacher_mean, teacher_std, q_st_start, q_st_end, q_ae_start, q_ae_end):
@@ -377,8 +377,13 @@ def saveParameters(file_path, teacher_mean, teacher_std, q_st_start, q_st_end, q
               'q_ae_start': q_ae_start,
               'q_ae_end': q_ae_end}
     
-    with open(file_path, 'w') as f:
-        yaml.dump(object, f, allow_unicode=True)
+    torch.save(teacher_mean, os.path.join(file_path, 'teacher_mean.pt'))
+    torch.save(teacher_std, os.path.join(file_path, 'teacher_std.pt'))
+    torch.save(q_st_start, os.path.join(file_path, 'q_st_start.pt'))
+    torch.save(q_st_end, os.path.join(file_path, 'q_st_end.pt'))
+    torch.save(q_ae_start, os.path.join(file_path, 'q_ae_start.pt'))
+    torch.save(q_ae_end, os.path.join(file_path, 'q_ae_end.pt'))
+
 
 if __name__ == '__main__':
     main()
