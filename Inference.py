@@ -3,7 +3,7 @@ import os
 import torch
 
 from common import get_autoencoder, get_pdn_small, get_pdn_medium, \
-    ImageFolderWithoutTarget, ImageFolderWithPath, InfiniteDataloader
+    ImageFolderWithoutTarget, ImageFolderWithPath, InfiniteDataloader, LoadParameters
 from efficientad import test
 
 
@@ -41,16 +41,6 @@ def main(config):
             q_st_end=q_st_end, q_ae_start=q_ae_start, q_ae_end=q_ae_end,
             test_output_dir=None, desc='Inference')
     print('Intermediate image auc: {:.4f}'.format(auc))
-
-# Load parameters for Inference
-def LoadParameters(file_path):
-    teacher_mean = torch.load(os.path.join(file_path, 'teacher_mean.pt'))
-    teacher_std = torch.load(os.path.join(file_path, 'teacher_std.pt'))
-    q_st_start = torch.load(os.path.join(file_path, 'q_st_start.pt'))    
-    q_st_end = torch.load(os.path.join(file_path, 'q_st_end.pt'))    
-    q_ae_start = torch.load(os.path.join(file_path, 'q_ae_start.pt'))    
-    q_ae_end = torch.load(os.path.join(file_path, 'q_ae_end.pt'))    
-    return teacher_mean, teacher_std, q_st_start, q_st_end, q_ae_start, q_ae_end
         
 
 if __name__ == '__main__':

@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import os
+import torch
 from torch import nn
 from torchvision.datasets import ImageFolder
 
@@ -118,3 +120,21 @@ def InfiniteDataloader(loader):
             yield next(iterator)
         except StopIteration:
             iterator = iter(loader)
+
+# Load parameters for Inference
+def LoadParameters(file_path):
+    teacher_mean = torch.load(os.path.join(file_path, 'teacher_mean.pt'))
+    teacher_std = torch.load(os.path.join(file_path, 'teacher_std.pt'))
+    q_st_start = torch.load(os.path.join(file_path, 'q_st_start.pt'))    
+    q_st_end = torch.load(os.path.join(file_path, 'q_st_end.pt'))    
+    q_ae_start = torch.load(os.path.join(file_path, 'q_ae_start.pt'))    
+    q_ae_end = torch.load(os.path.join(file_path, 'q_ae_end.pt'))    
+    return teacher_mean, teacher_std, q_st_start, q_st_end, q_ae_start, q_ae_end
+
+def saveParameters(file_path, teacher_mean, teacher_std, q_st_start, q_st_end, q_ae_start, q_ae_end):  
+    torch.save(teacher_mean, os.path.join(file_path, 'teacher_mean.pt'))
+    torch.save(teacher_std, os.path.join(file_path, 'teacher_std.pt'))
+    torch.save(q_st_start, os.path.join(file_path, 'q_st_start.pt'))
+    torch.save(q_st_end, os.path.join(file_path, 'q_st_end.pt'))
+    torch.save(q_ae_start, os.path.join(file_path, 'q_ae_start.pt'))
+    torch.save(q_ae_end, os.path.join(file_path, 'q_ae_end.pt'))

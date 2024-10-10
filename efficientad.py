@@ -12,7 +12,7 @@ import random
 
 from tqdm import tqdm
 from common import get_autoencoder, get_pdn_small, get_pdn_medium, \
-    ImageFolderWithoutTarget, ImageFolderWithPath, InfiniteDataloader
+    ImageFolderWithoutTarget, ImageFolderWithPath, InfiniteDataloader, saveParameters
 from sklearn.metrics import roc_auc_score
 
 def get_argparse():
@@ -368,21 +368,6 @@ def teacher_normalization(teacher, train_loader):
     channel_var = channel_var[None, :, None, None]
     channel_std = torch.sqrt(channel_var)
     return channel_mean, channel_std
-
-def saveParameters(file_path, teacher_mean, teacher_std, q_st_start, q_st_end, q_ae_start, q_ae_end):
-    object = {'teacher_mean': teacher_mean, 
-              'teacher_std': teacher_std, 
-              'q_st_start': q_st_start,
-              'q_st_end': q_st_end,
-              'q_ae_start': q_ae_start,
-              'q_ae_end': q_ae_end}
-    
-    torch.save(teacher_mean, os.path.join(file_path, 'teacher_mean.pt'))
-    torch.save(teacher_std, os.path.join(file_path, 'teacher_std.pt'))
-    torch.save(q_st_start, os.path.join(file_path, 'q_st_start.pt'))
-    torch.save(q_st_end, os.path.join(file_path, 'q_st_end.pt'))
-    torch.save(q_ae_start, os.path.join(file_path, 'q_ae_start.pt'))
-    torch.save(q_ae_end, os.path.join(file_path, 'q_ae_end.pt'))
 
 
 if __name__ == '__main__':
